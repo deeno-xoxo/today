@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="Today, your call">
+<meta property="og:description" content="Five quick taps.">
+<meta name="theme-color" content="#ffd9c7">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Today, Your Call</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one question per screen, a sunset card stack you tap through. Single warm look on purpose. */
+:root {
+  --sky-top: #ffd9c7;
+  --sky-bottom: #ffb3b8;
+  --ink: #2b1838;
+  --ink-soft: #6b4a68;
+  --card: #fff8f4;
+  --accent: #e2456b;
+  --accent-ink: #ffffff;
+  --line: #f1d3d3;
+  --pick: #ffe3e8;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "DM Sans", -apple-system, system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--ink);
+  background: linear-gradient(170deg, var(--sky-top) 0%, var(--sky-bottom) 100%) fixed;
+  background-color: var(--sky-bottom);
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap {
+  min-height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-block: 28px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; }
+.back {
+  font: 600 14px var(--body); color: var(--ink-soft); background: none; border: 0; padding: 8px 4px; cursor: pointer;
+}
+.back:focus-visible, .opt:focus-visible, .cta:focus-visible, .ghost:focus-visible, textarea:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 22px; height: 6px; border-radius: 99px; background: rgba(43,24,56,.15); transition: background .25s; }
+.dot.on { background: var(--ink); }
+.count { font: 600 12px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+
+.card {
+  background: var(--card);
+  border-radius: 28px;
+  padding: 26px 20px 22px;
+  box-shadow: 0 18px 40px -18px rgba(120, 30, 60, .35);
+  display: flex; flex-direction: column; gap: 18px;
+  animation: in .35s ease both;
+}
+@keyframes in { from { transform: translateY(10px); opacity: .4; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } .dot { transition: none; } }
+
+h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+h1 { font-size: 40px; line-height: 1.02; font-weight: 800; }
+h2 { font-size: 27px; line-height: 1.1; font-weight: 700; }
+.lede { margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-soft); }
+.hint { margin: -8px 0 0; font-size: 13px; color: var(--ink-soft); }
+
+.opts { display: grid; gap: 10px; }
+.opts.two { grid-template-columns: 1fr 1fr; }
+.opt {
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  width: 100%; min-height: 56px; padding: 12px 14px;
+  font: 500 16px var(--body); color: var(--ink);
+  background: #fff; border: 2px solid var(--line); border-radius: 18px; cursor: pointer;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.opt:active { transform: scale(.98); }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--pick); }
+.opt small { display: block; font-size: 13px; color: var(--ink-soft); font-weight: 400; margin-top: 2px; }
+
+/* battery icon for question 1 */
+.batt { flex: none; width: 34px; height: 18px; border: 2px solid var(--ink); border-radius: 5px; position: relative; padding: 2px; }
+.batt::after { content: ""; position: absolute; right: -6px; top: 4px; width: 3px; height: 6px; border-radius: 0 2px 2px 0; background: var(--ink); }
+.batt i { display: block; height: 100%; border-radius: 2px; background: var(--fill, var(--accent)); }
+
+/* mystery boxes for question 5 */
+.boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.box {
+  aspect-ratio: 1; max-width: 100%;
+  display: grid; place-items: center; gap: 4px; align-content: center;
+  font: 800 34px var(--display); color: var(--ink);
+  background: #fff; border: 2px solid var(--line); border-radius: 20px; cursor: pointer;
+  transition: border-color .15s, background .15s, transform .15s;
+}
+.box span { font: 600 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.box[aria-pressed="true"] { border-color: var(--accent); background: var(--pick); transform: rotate(-3deg); }
+
+textarea {
+  width: 100%; min-height: 96px; resize: vertical; padding: 14px;
+  font: 400 16px/1.45 var(--body); color: var(--ink);
+  background: #fff; border: 2px solid var(--line); border-radius: 18px;
+}
+
+.cta {
+  width: 100%; min-height: 56px; border: 0; border-radius: 999px; cursor: pointer;
+  font: 700 17px var(--body); color: var(--accent-ink); background: var(--accent);
+  box-shadow: 0 10px 22px -10px rgba(226, 69, 107, .8);
+  text-decoration: none; display: grid; place-items: center;
+}
+.cta[disabled] { opacity: .4; box-shadow: none; cursor: default; }
+.ghost {
+  width: 100%; min-height: 50px; border-radius: 999px; cursor: pointer;
+  font: 600 15px var(--body); color: var(--ink); background: transparent; border: 2px solid var(--ink);
+}
+
+.summary { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.summary li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.summary li:first-child { border-top: 0; }
+.summary b { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; padding-top: 2px; }
+.summary span { min-width: 0; overflow-wrap: anywhere; }
+.toast { text-align: center; font-size: 14px; color: var(--ink-soft); min-height: 20px; margin: 0; }
+.foot { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 0; }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <button class="back" id="back" type="button" hidden>&larr; Back</button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <main id="screen"></main>
+</div>
+
+<script>
+// ===== EDIT THESE =====
+const HIS_NAME = "Dean";
+const PHONE = "";            // your number, e.g. "+15625551234". Blank = she picks you in the To: field.
+// ======================
+
+const Q = [
+  { id: "energy", label: "Energy", title: "Battery check. How are you feeling today?", type: "battery",
+    options: [
+      { v: "10%: send snacks and a blanket", pct: 12, color: "#e2456b" },
+      { v: "40%: down for something low-key", pct: 40, color: "#f08a4b" },
+      { v: "75%: pretty good actually", pct: 75, color: "#e7b53c" },
+      { v: "100%: lets go", pct: 100, color: "#3fae7a" },
+    ] },
+  { id: "vibe", label: "Vibe", title: "What kind of date sounds good?", type: "one",
+    options: [
+      { v: "Out and about", sub: "Some walking, some outside time" },
+      { v: "Chill and mostly indoors", sub: "Less walking, places to sit" },
+      { v: "A little of both", sub: "Start easy, see how I feel" },
+      { v: "Full cozy mode", sub: "Food, a movie, you come to me" },
+    ] },
+  { id: "craving", label: "Craving", title: "What are you craving?", type: "one", two: true,
+    options: [ { v: "Salty" }, { v: "Sweet" }, { v: "A real meal" }, { v: "Boba or coffee" }, { v: "Literally all of it" }, { v: "Surprise me" } ] },
+  { id: "bring", label: "Bring", title: "What should I bring?", hint: "Pick as many as you want.", type: "many",
+    options: [ { v: "Snacks" }, { v: "Water" }, { v: "A hoodie you can steal" }, { v: "Heating pad" }, { v: "Midol / Advil" }, { v: "Just you" } ] },
+  { id: "box", label: "Mystery", title: "Pick a mystery box.", hint: "Each one is a little surprise. No peeking.", type: "box",
+    options: [ { v: "Box 1" }, { v: "Box 2" }, { v: "Box 3" } ] },
+];
+
+const answers = {};
+let step = -1; // -1 = intro, Q.length = note, Q.length+1 = done
+
+const $ = (s) => document.querySelector(s);
+const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); e.innerHTML = html; return e; };
+
+function chrome() {
+  const dots = $("#dots"); dots.innerHTML = "";
+  const inQuiz = step >= 0 && step < Q.length;
+  $("#back").hidden = step < 0 || step > Q.length;
+  $("#count").textContent = inQuiz ? `${step + 1} of ${Q.length}` : "";
+  if (inQuiz) Q.forEach((_, i) => dots.appendChild(el("span", { class: "dot" + (i <= step ? " on" : "") })));
+}
+
+function render() {
+  chrome();
+  const s = $("#screen"); s.innerHTML = "";
+  const card = el("section", { class: "card" });
+  s.appendChild(card);
+
+  if (step === -1) {
+    card.append(
+      el("h1", {}, "Today’s date, your call."),
+      el("p", { class: "lede" }, `I had a plan, but I want today to feel good for you. Five quick taps and I’ll work it out from there. — ${HIS_NAME}`)
+    );
+    const go = el("button", { class: "cta", type: "button", id: "start" }, "Let’s do it");
+    go.onclick = () => { step = 0; render(); };
+    card.append(go);
+    return;
+  }
+
+  if (step < Q.length) {
+    const q = Q[step];
+    card.append(el("h2", {}, q.title));
+    if (q.hint) card.append(el("p", { class: "hint" }, q.hint));
+    const wrap = el("div", { class: q.type === "box" ? "boxes" : "opts" + (q.two ? " two" : "") });
+    const picked = () => answers[q.id] || (q.type === "many" ? [] : null);
+
+    q.options.forEach((o, i) => {
+      const b = el("button", { type: "button", class: q.type === "box" ? "box" : "opt", id: `${q.id}-${i}` });
+      if (q.type === "battery") b.innerHTML = `<span class="batt"><i style="width:${o.pct}%;--fill:${o.color}"></i></span><span>${o.v}</span>`;
+      else if (q.type === "box") b.innerHTML = `${i + 1}<span>Box</span>`;
+      else b.innerHTML = `<span>${o.v}${o.sub ? `<small>${o.sub}</small>` : ""}</span>`;
+      const on = q.type === "many" ? picked().includes(o.v) : picked() === o.v;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.onclick = () => {
+        if (q.type === "many") {
+          let a = picked().slice();
+          if (o.v === "Just you") a = a.includes("Just you") ? [] : ["Just you"];
+          else { a = a.filter((x) => x !== "Just you"); a = a.includes(o.v) ? a.filter((x) => x !== o.v) : [...a, o.v]; }
+          answers[q.id] = a; render();
+        } else {
+          answers[q.id] = o.v; render();
+          setTimeout(() => { step++; render(); }, 260);
+        }
+      };
+      wrap.append(b);
+    });
+    card.append(wrap);
+
+    if (q.type === "many") {
+      const next = el("button", { class: "cta", type: "button", id: "next" }, "Next");
+      if (!picked().length) next.disabled = true;
+      next.onclick = () => { step++; render(); };
+      card.append(next);
+    }
+    return;
+  }
+
+  if (step === Q.length) {
+    card.append(el("h2", {}, "Anything else I should know?"), el("p", { class: "hint" }, "Optional. Totally fine to skip."));
+    const t = el("textarea", { id: "note", placeholder: "Type here…" });
+    t.value = answers.note || "";
+    t.oninput = () => (answers.note = t.value);
+    const done = el("button", { class: "cta", type: "button", id: "finish" }, "See my answers");
+    done.onclick = () => { step++; render(); };
+    card.append(t, done);
+    return;
+  }
+
+  // done screen
+  card.append(el("h2", {}, "Got it. Send these to me?"));
+  const ul = el("ul", { class: "summary" });
+  Q.forEach((q) => {
+    const a = answers[q.id];
+    ul.append(el("li", {}, `<b>${q.label}</b><span>${Array.isArray(a) ? a.join(", ") : a || "—"}</span>`));
+  });
+  if (answers.note) ul.append(el("li", {}, `<b>Note</b><span></span>`)), (ul.lastChild.querySelector("span").textContent = answers.note);
+  card.append(ul);
+
+  const text = buildText();
+  const send = el("a", { class: "cta", id: "send", href: `sms:${PHONE}${/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?"}body=${encodeURIComponent(text)}` }, `Text my answers to ${HIS_NAME}`);
+  const copy = el("button", { class: "ghost", type: "button", id: "copy" }, "Copy answers instead");
+  const toast = el("p", { class: "toast", id: "toast" }, "");
+  copy.onclick = async () => {
+    try { await navigator.clipboard.writeText(text); toast.textContent = "Copied. Paste it in our chat."; }
+    catch { toast.textContent = "Couldn’t copy. Screenshot this page instead."; }
+  };
+  card.append(send, copy, toast);
+  s.append(el("p", { class: "foot" }, "Can’t wait to see you."));
+}
+
+function buildText() {
+  const lines = Q.map((q) => { const a = answers[q.id]; return `${q.label}: ${Array.isArray(a) ? a.join(", ") : a || "-"}`; });
+  if (answers.note) lines.push(`Note: ${answers.note}`);
+  return "my answers:\n" + lines.join("\n");
+}
+
+$("#back").onclick = () => { step--; render(); };
+render();
+</script>
+
+</body>
+</html>
