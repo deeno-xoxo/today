@@ -3,139 +3,153 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta property="og:title" content="Today, your call">
-<meta property="og:description" content="Five quick taps.">
-<meta name="theme-color" content="#ffd9c7">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
-</head>
-<body>
-<title>Today, Your Call</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<title>Paytie's Special Sunday Plan</title>
+<meta property="og:title" content="Paytie's Special Sunday Plan 🌸">
+<meta property="og:description" content="A few quick questions to help decide the date for today.">
+<meta name="theme-color" content="#ffd6e2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: one question per screen, a sunset card stack you tap through. Single warm look on purpose. */
+/* Layout: one question per card over a pink sky with petals always falling; confetti on every tap. Single pink look on purpose. */
 :root {
-  --sky-top: #ffd9c7;
-  --sky-bottom: #ffb3b8;
-  --ink: #2b1838;
-  --ink-soft: #6b4a68;
-  --card: #fff8f4;
-  --accent: #e2456b;
+  --sky-top: #ffe4ec;
+  --sky-bottom: #ffb8cc;
+  --ink: #3a1530;
+  --ink-soft: #7d4a6c;
+  --card: #fff7fa;
+  --accent: #e8457a;
   --accent-ink: #ffffff;
-  --line: #f1d3d3;
-  --pick: #ffe3e8;
+  --line: #f6cfdc;
+  --pick: #ffe0ea;
   --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
   --body: "DM Sans", -apple-system, system-ui, sans-serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); background: var(--sky-bottom); }
 body {
-  margin: 0;
-  font-family: var(--body);
-  font-size: 16px;
-  color: var(--ink);
+  margin: 0; font-family: var(--body); font-size: 16px; color: var(--ink);
   background: linear-gradient(170deg, var(--sky-top) 0%, var(--sky-bottom) 100%) fixed;
   background-color: var(--sky-bottom);
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; overflow-x: hidden;
 }
+[hidden] { display: none !important; }
+canvas.fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#petals { z-index: 0; }
+#confetti { z-index: 50; }
+
 .wrap {
-  min-height: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding-block: 28px 32px;
+  position: relative; z-index: 1;
+  min-height: 100%; max-width: 480px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 16px;
+  padding-block: 22px 40px;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; }
-.back {
-  font: 600 14px var(--body); color: var(--ink-soft); background: none; border: 0; padding: 8px 4px; cursor: pointer;
-}
-.back:focus-visible, .opt:focus-visible, .cta:focus-visible, .ghost:focus-visible, textarea:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-.dots { display: flex; gap: 6px; }
-.dot { width: 22px; height: 6px; border-radius: 99px; background: rgba(43,24,56,.15); transition: background .25s; }
-.dot.on { background: var(--ink); }
-.count { font: 600 12px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.back { font: 600 14px var(--body); color: var(--ink-soft); background: none; border: 0; padding: 8px 4px; cursor: pointer; }
+.dots { display: flex; gap: 5px; }
+.dot { width: 16px; height: 6px; border-radius: 99px; background: rgba(58,21,48,.14); transition: background .25s; }
+.dot.on { background: var(--accent); }
+.count { font: 700 12px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+button:focus-visible, a:focus-visible, textarea:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
 .card {
-  background: var(--card);
-  border-radius: 28px;
-  padding: 26px 20px 22px;
-  box-shadow: 0 18px 40px -18px rgba(120, 30, 60, .35);
+  position: relative;
+  background: var(--card); border-radius: 30px; padding: 26px 20px 22px;
+  box-shadow: 0 20px 44px -20px rgba(160, 30, 80, .45);
   display: flex; flex-direction: column; gap: 18px;
-  animation: in .35s ease both;
+  animation: in .4s cubic-bezier(.2,.9,.3,1.2) both;
 }
-@keyframes in { from { transform: translateY(10px); opacity: .4; } to { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .card { animation: none; } .dot { transition: none; } }
+@keyframes in { from { transform: translateY(14px) scale(.98); opacity: .3; } to { transform: none; opacity: 1; } }
 
 h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
-h1 { font-size: 40px; line-height: 1.02; font-weight: 800; }
-h2 { font-size: 27px; line-height: 1.1; font-weight: 700; }
+h1 { font-size: 38px; line-height: 1.04; font-weight: 800; }
+h1 em { font-style: normal; color: var(--accent); }
+h2 { font-size: 25px; line-height: 1.15; font-weight: 800; }
 .lede { margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-soft); }
-.hint { margin: -8px 0 0; font-size: 13px; color: var(--ink-soft); }
+.hint { margin: -8px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+/* Dean's frog face */
+.face { display: inline-block; width: 1.5em; height: 1.5em; border-radius: 50%; vertical-align: -0.38em; object-fit: contain; }
+.face.big { width: 92px; height: 92px; }
+.face-fallback { display: inline-grid; place-items: center; background: #c8f0b4; font-size: .9em; }
+.face.big.face-fallback { font-size: 50px; }
+.hero-face { align-self: center; animation: bob 2.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-6px) rotate(-4deg); } }
+.peek {
+  position: fixed; z-index: 40; width: 86px; height: 86px; pointer-events: none;
+  right: calc(-10px + env(safe-area-inset-right, 0px)); bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(120%) rotate(18deg); transition: transform .5s cubic-bezier(.2,.9,.3,1.3);
+}
+.peek.left { right: auto; left: calc(-10px + env(safe-area-inset-left, 0px)); transform: translateX(-120%) rotate(-18deg); }
+.peek.show { transform: translateX(0) rotate(-8deg); }
+.peek.left.show { transform: translateX(0) rotate(8deg); }
+.peek .face { width: 86px; height: 86px; }
+.peek .bubble {
+  position: absolute; bottom: 82px; right: 10px; white-space: nowrap;
+  background: var(--ink); color: #fff; font: 700 13px var(--body); padding: 6px 10px; border-radius: 14px;
+}
+.peek.left .bubble { right: auto; left: 10px; }
 
 .opts { display: grid; gap: 10px; }
 .opts.two { grid-template-columns: 1fr 1fr; }
 .opt {
   display: flex; align-items: center; gap: 12px; text-align: left;
-  width: 100%; min-height: 56px; padding: 12px 14px;
-  font: 500 16px var(--body); color: var(--ink);
-  background: #fff; border: 2px solid var(--line); border-radius: 18px; cursor: pointer;
-  transition: border-color .15s, background .15s, transform .1s;
-}
-.opt:active { transform: scale(.98); }
-.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--pick); }
-.opt small { display: block; font-size: 13px; color: var(--ink-soft); font-weight: 400; margin-top: 2px; }
-
-/* battery icon for question 1 */
-.batt { flex: none; width: 34px; height: 18px; border: 2px solid var(--ink); border-radius: 5px; position: relative; padding: 2px; }
-.batt::after { content: ""; position: absolute; right: -6px; top: 4px; width: 3px; height: 6px; border-radius: 0 2px 2px 0; background: var(--ink); }
-.batt i { display: block; height: 100%; border-radius: 2px; background: var(--fill, var(--accent)); }
-
-/* mystery boxes for question 5 */
-.boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.box {
-  aspect-ratio: 1; max-width: 100%;
-  display: grid; place-items: center; gap: 4px; align-content: center;
-  font: 800 34px var(--display); color: var(--ink);
+  width: 100%; min-height: 58px; padding: 12px 14px;
+  font: 600 16px var(--body); color: var(--ink);
   background: #fff; border: 2px solid var(--line); border-radius: 20px; cursor: pointer;
-  transition: border-color .15s, background .15s, transform .15s;
+  transition: border-color .15s, background .15s, transform .12s;
 }
-.box span { font: 600 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-.box[aria-pressed="true"] { border-color: var(--accent); background: var(--pick); transform: rotate(-3deg); }
+.opt:active { transform: scale(.97); }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--pick); }
+.opt .emo { font-size: 24px; flex: none; width: 30px; text-align: center; }
+
+.batt { flex: none; width: 36px; height: 19px; border: 2px solid var(--ink); border-radius: 5px; position: relative; padding: 2px; }
+.batt::after { content: ""; position: absolute; right: -6px; top: 4px; width: 3px; height: 7px; border-radius: 0 2px 2px 0; background: var(--ink); }
+.batt i { display: block; height: 100%; border-radius: 2px; background: var(--fill); }
+
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.num {
+  aspect-ratio: 1; max-width: 100%; font: 800 22px var(--display); color: var(--ink);
+  background: #fff; border: 2px solid var(--line); border-radius: 16px; cursor: pointer; transition: transform .12s, background .15s;
+}
+.num:active { transform: scale(.94); }
+.num[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.scale-ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); margin-top: -8px; }
+.react { margin: 0; min-height: 24px; text-align: center; font: 700 16px var(--body); color: var(--accent); }
 
 textarea {
   width: 100%; min-height: 96px; resize: vertical; padding: 14px;
   font: 400 16px/1.45 var(--body); color: var(--ink);
-  background: #fff; border: 2px solid var(--line); border-radius: 18px;
+  background: #fff; border: 2px solid var(--line); border-radius: 20px;
 }
-
 .cta {
-  width: 100%; min-height: 56px; border: 0; border-radius: 999px; cursor: pointer;
+  width: 100%; min-height: 58px; border: 0; border-radius: 999px; cursor: pointer;
   font: 700 17px var(--body); color: var(--accent-ink); background: var(--accent);
-  box-shadow: 0 10px 22px -10px rgba(226, 69, 107, .8);
+  box-shadow: 0 12px 24px -10px rgba(232, 69, 122, .85);
   text-decoration: none; display: grid; place-items: center;
 }
 .cta[disabled] { opacity: .4; box-shadow: none; cursor: default; }
-.ghost {
-  width: 100%; min-height: 50px; border-radius: 999px; cursor: pointer;
-  font: 600 15px var(--body); color: var(--ink); background: transparent; border: 2px solid var(--ink);
+.ghost { width: 100%; min-height: 50px; border-radius: 999px; cursor: pointer; font: 600 15px var(--body); color: var(--ink); background: transparent; border: 2px solid var(--ink); text-decoration: none; display: grid; place-items: center; }
+
+.status { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--ink-soft); margin: 0; }
+.spin { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent); animation: sp 0.8s linear infinite; }
+@keyframes sp { to { transform: rotate(360deg); } }
+video, .video-wait { width: 100%; border-radius: 20px; background: #2a0f22; display: block; }
+.video-wait { aspect-ratio: 9 / 16; max-width: 100%; display: grid; place-items: center; text-align: center; color: #ffd6e2; padding: 20px; font-weight: 600; }
+.foot { text-align: center; font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .hero-face { animation: none; }
+  .peek { transition: none; }
 }
-
-.summary { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; }
-.summary li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-.summary li:first-child { border-top: 0; }
-.summary b { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; padding-top: 2px; }
-.summary span { min-width: 0; overflow-wrap: anywhere; }
-.toast { text-align: center; font-size: 14px; color: var(--ink-soft); min-height: 20px; margin: 0; }
-.foot { text-align: center; font-size: 13px; color: var(--ink-soft); margin: 0; }
 </style>
-
+</head>
+<body>
+<canvas id="petals" class="fx" aria-hidden="true"></canvas>
 <div class="wrap">
   <div class="top">
     <button class="back" id="back" type="button" hidden>&larr; Back</button>
@@ -144,41 +158,53 @@ textarea {
   </div>
   <main id="screen"></main>
 </div>
+<div class="peek" id="peek" aria-hidden="true"><span class="bubble" id="peekText"></span><span id="peekFace"></span></div>
+<canvas id="confetti" class="fx" aria-hidden="true"></canvas>
 
 <script>
-// ===== EDIT THESE =====
-const HIS_NAME = "Dean";
-const PHONE = "";            // your number, e.g. "+15625551234". Blank = she picks you in the To: field.
-// ======================
+// ===== SETTINGS =====
+const HER = "Paytie";
+const HIM = "Dean";
+const FACE = "assets/dean-frog.png";   // frog hat cutout (transparent PNG)
+const VIDEO = "assets/reward.mp4";      // reward video
+const NTFY = "https://ntfy.sh/paytie-sunday-a1bbc4e74827"; // Dean gets a phone notification here
+// ====================
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let faceOk = true;
+const faceTest = new Image(); faceTest.onerror = () => { faceOk = false; render(); }; faceTest.src = FACE;
+const face = (cls = "") => faceOk ? `<img class="face ${cls}" src="${FACE}" alt="${HIM}">` : `<span class="face face-fallback ${cls}" role="img" aria-label="${HIM}">🐸</span>`;
+const dean = () => `${HIM} ${face()}`;
 
 const Q = [
-  { id: "energy", label: "Energy", title: "Battery check. How are you feeling today?", type: "battery",
+  { id: "battery", label: "Battery", type: "battery", title: () => "Battery check. How’s your body feeling today?",
     options: [
-      { v: "10%: send snacks and a blanket", pct: 12, color: "#e2456b" },
-      { v: "40%: down for something low-key", pct: 40, color: "#f08a4b" },
-      { v: "75%: pretty good actually", pct: 75, color: "#e7b53c" },
-      { v: "100%: lets go", pct: 100, color: "#3fae7a" },
+      { v: "10%: send snacks and a blanket", e: "🪫", pct: 12, color: "#e8457a" },
+      { v: "40%: down for something low-key", e: "😮‍💨", pct: 40, color: "#f2894f" },
+      { v: "75%: pretty good actually", e: "🙂", pct: 75, color: "#e9b83d" },
+      { v: "100%: lets go", e: "⚡️", pct: 100, color: "#44b07c" },
     ] },
-  { id: "vibe", label: "Vibe", title: "What kind of date sounds good?", type: "one",
-    options: [
-      { v: "Out and about", sub: "Some walking, some outside time" },
-      { v: "Chill and mostly indoors", sub: "Less walking, places to sit" },
-      { v: "A little of both", sub: "Start easy, see how I feel" },
-      { v: "Full cozy mode", sub: "Food, a movie, you come to me" },
-    ] },
-  { id: "craving", label: "Craving", title: "What are you craving?", type: "one", two: true,
-    options: [ { v: "Salty" }, { v: "Sweet" }, { v: "A real meal" }, { v: "Boba or coffee" }, { v: "Literally all of it" }, { v: "Surprise me" } ] },
-  { id: "bring", label: "Bring", title: "What should I bring?", hint: "Pick as many as you want.", type: "many",
-    options: [ { v: "Snacks" }, { v: "Water" }, { v: "A hoodie you can steal" }, { v: "Heating pad" }, { v: "Midol / Advil" }, { v: "Just you" } ] },
-  { id: "box", label: "Mystery", title: "Pick a mystery box.", hint: "Each one is a little surprise. No peeking.", type: "box",
-    options: [ { v: "Box 1" }, { v: "Box 2" }, { v: "Box 3" } ] },
+  { id: "see", label: "Want to see Dean", type: "scale", title: () => `On a scale of 1 to 10, how badly do you still want to see ${dean()}?` },
+  { id: "miss", label: "Misses him", type: "one", title: () => "How much do you miss him?",
+    options: [ { v: "A little bit", e: "🤏" }, { v: "A lot", e: "🥺" }, { v: "So much it’s embarrassing", e: "😭" }, { v: "Who’s Dean?", e: "🙄" } ] },
+  { id: "day", label: "Kind of day", type: "one", title: () => "What kind of day are you feeling?", hint: "No wrong answers.",
+    options: [ { v: "Lay down all day", e: "🛌" }, { v: "Cozy, low-key hang", e: "☕️" }, { v: "A little adventure", e: "🌷" }, { v: "Not sure, Dean can decide", e: "🎲" } ] },
+  { id: "outfit", label: "Outfit", type: "one", title: () => "Comfy clothes or dressing up?",
+    options: [ { v: "Comfy clothes all day", e: "🧸" }, { v: "Cute but comfy", e: "🎀" }, { v: "Dressing up", e: "💅" } ] },
+  { id: "craving", label: "Craving", type: "one", two: true, title: () => "Craving anything food-wise?",
+    options: [ { v: "Sweet", e: "🍩" }, { v: "Salty", e: "🍟" }, { v: "A real meal", e: "🍜" }, { v: "Boba or coffee", e: "🧋" }, { v: "Not really hungry", e: "🤍" }, { v: "Surprise me", e: "🎁" } ] },
+  { id: "bring", label: "Bring", type: "many", title: () => `What should ${dean()} bring?`, hint: "Pick as many as you want.",
+    options: [ { v: "Snacks", e: "🍫" }, { v: "Midol", e: "💊" }, { v: "Heating pad", e: "🔥" }, { v: "A hoodie to steal", e: "🧥" }, { v: "Flowers", e: "🌷" }, { v: "Just himself", e: "🐸" } ] },
 ];
 
+const SEE_REACT = (n) => n <= 3 ? "wow ok 💔" : n <= 6 ? "hmm, he’ll take it 😤" : n <= 9 ? "aww 🥹" : "correct answer 💖";
+const PEEKS = { 1: "hi 👋", 3: "pick the cozy one 👀", 5: "almost done!", 6: "ill bring it 🫡" };
+
 const answers = {};
-let step = -1; // -1 = intro, Q.length = note, Q.length+1 = done
+let step = -1;
 
 const $ = (s) => document.querySelector(s);
-const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); e.innerHTML = html; return e; };
+const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); e.innerHTML = html; return e; };
 
 function chrome() {
   const dots = $("#dots"); dots.innerHTML = "";
@@ -188,103 +214,207 @@ function chrome() {
   if (inQuiz) Q.forEach((_, i) => dots.appendChild(el("span", { class: "dot" + (i <= step ? " on" : "") })));
 }
 
+let peekTimer;
+function peek(text) {
+  const p = $("#peek");
+  $("#peekFace").innerHTML = face();
+  $("#peekText").textContent = text;
+  p.classList.toggle("left", Math.random() < 0.5);
+  p.classList.remove("show"); void p.offsetWidth;
+  clearTimeout(peekTimer);
+  requestAnimationFrame(() => p.classList.add("show"));
+  peekTimer = setTimeout(() => p.classList.remove("show"), 2200);
+}
+
+function next(delay = 450) { setTimeout(() => { step++; render(); if (PEEKS[step]) setTimeout(() => peek(PEEKS[step]), 500); }, delay); }
+
 function render() {
   chrome();
   const s = $("#screen"); s.innerHTML = "";
   const card = el("section", { class: "card" });
   s.appendChild(card);
+  window.scrollTo(0, 0);
 
   if (step === -1) {
     card.append(
-      el("h1", {}, "Today’s date, your call."),
-      el("p", { class: "lede" }, `I had a plan, but I want today to feel good for you. Five quick taps and I’ll work it out from there. — ${HIS_NAME}`)
+      el("div", { class: "hero-face" }, face("big")),
+      el("h1", {}, `${HER}’s Special <em>Sunday Plan</em>`),
+      el("p", { class: "lede" }, `A few quick questions to help decide the date for today. Nothing to plan and no wrong answers, just tap whatever feels right. 🌸`)
     );
-    const go = el("button", { class: "cta", type: "button", id: "start" }, "Let’s do it");
-    go.onclick = () => { step = 0; render(); };
+    const go = el("button", { class: "cta", type: "button", id: "start" }, "Okay, let’s go");
+    go.onclick = (ev) => { burst(ev); next(250); };
     card.append(go);
     return;
   }
 
   if (step < Q.length) {
     const q = Q[step];
-    card.append(el("h2", {}, q.title));
+    card.append(el("h2", {}, q.title()));
     if (q.hint) card.append(el("p", { class: "hint" }, q.hint));
-    const wrap = el("div", { class: q.type === "box" ? "boxes" : "opts" + (q.two ? " two" : "") });
-    const picked = () => answers[q.id] || (q.type === "many" ? [] : null);
 
+    if (q.type === "scale") {
+      const grid = el("div", { class: "scale" });
+      const react = el("p", { class: "react", "aria-live": "polite" }, answers.see ? SEE_REACT(answers.see) : "");
+      for (let n = 1; n <= 10; n++) {
+        const b = el("button", { class: "num", type: "button", id: `see-${n}`, "aria-pressed": answers.see === n ? "true" : "false" }, String(n));
+        b.onclick = (ev) => {
+          answers.see = n;
+          grid.querySelectorAll(".num").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+          react.textContent = SEE_REACT(n);
+          burst(ev, n === 10 ? 2.2 : 1);
+          next(1100);
+        };
+        grid.append(b);
+      }
+      card.append(grid, el("div", { class: "scale-ends" }, "<span>meh</span><span>SO bad</span>"), react);
+      return;
+    }
+
+    const wrap = el("div", { class: "opts" + (q.two ? " two" : "") });
+    const picked = () => answers[q.id] || (q.type === "many" ? [] : null);
     q.options.forEach((o, i) => {
-      const b = el("button", { type: "button", class: q.type === "box" ? "box" : "opt", id: `${q.id}-${i}` });
-      if (q.type === "battery") b.innerHTML = `<span class="batt"><i style="width:${o.pct}%;--fill:${o.color}"></i></span><span>${o.v}</span>`;
-      else if (q.type === "box") b.innerHTML = `${i + 1}<span>Box</span>`;
-      else b.innerHTML = `<span>${o.v}${o.sub ? `<small>${o.sub}</small>` : ""}</span>`;
+      const b = el("button", { type: "button", class: "opt", id: `${q.id}-${i}` });
+      const lead = q.type === "battery" ? `<span class="batt"><i style="width:${o.pct}%;--fill:${o.color}"></i></span>` : `<span class="emo">${o.e}</span>`;
+      b.innerHTML = `${lead}<span>${o.v}${q.type === "battery" ? " " + o.e : ""}</span>`;
       const on = q.type === "many" ? picked().includes(o.v) : picked() === o.v;
       b.setAttribute("aria-pressed", on ? "true" : "false");
-      b.onclick = () => {
+      b.onclick = (ev) => {
+        burst(ev);
         if (q.type === "many") {
           let a = picked().slice();
-          if (o.v === "Just you") a = a.includes("Just you") ? [] : ["Just you"];
-          else { a = a.filter((x) => x !== "Just you"); a = a.includes(o.v) ? a.filter((x) => x !== o.v) : [...a, o.v]; }
-          answers[q.id] = a; render();
+          if (o.v === "Just himself") a = a.includes(o.v) ? [] : [o.v];
+          else { a = a.filter((x) => x !== "Just himself"); a = a.includes(o.v) ? a.filter((x) => x !== o.v) : [...a, o.v]; }
+          answers[q.id] = a;
+          wrap.querySelectorAll(".opt").forEach((x, j) => x.setAttribute("aria-pressed", a.includes(q.options[j].v) ? "true" : "false"));
+          nextBtn.disabled = !a.length;
         } else {
-          answers[q.id] = o.v; render();
-          setTimeout(() => { step++; render(); }, 260);
+          answers[q.id] = o.v;
+          wrap.querySelectorAll(".opt").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+          next();
         }
       };
       wrap.append(b);
     });
     card.append(wrap);
-
+    var nextBtn;
     if (q.type === "many") {
-      const next = el("button", { class: "cta", type: "button", id: "next" }, "Next");
-      if (!picked().length) next.disabled = true;
-      next.onclick = () => { step++; render(); };
-      card.append(next);
+      nextBtn = el("button", { class: "cta", type: "button", id: "next" }, "Next");
+      nextBtn.disabled = !picked().length;
+      nextBtn.onclick = (ev) => { burst(ev); next(250); };
+      card.append(nextBtn);
     }
     return;
   }
 
   if (step === Q.length) {
-    card.append(el("h2", {}, "Anything else I should know?"), el("p", { class: "hint" }, "Optional. Totally fine to skip."));
+    card.append(el("h2", {}, `Anything else ${dean()} should know?`), el("p", { class: "hint" }, "Optional. Totally fine to skip."));
     const t = el("textarea", { id: "note", placeholder: "Type here…" });
     t.value = answers.note || "";
     t.oninput = () => (answers.note = t.value);
-    const done = el("button", { class: "cta", type: "button", id: "finish" }, "See my answers");
-    done.onclick = () => { step++; render(); };
+    const done = el("button", { class: "cta", type: "button", id: "finish" }, "Submit 💌");
+    done.onclick = (ev) => { burst(ev, 2.5); step++; render(); send(); };
     card.append(t, done);
     return;
   }
 
-  // done screen
-  card.append(el("h2", {}, "Got it. Send these to me?"));
-  const ul = el("ul", { class: "summary" });
-  Q.forEach((q) => {
-    const a = answers[q.id];
-    ul.append(el("li", {}, `<b>${q.label}</b><span>${Array.isArray(a) ? a.join(", ") : a || "—"}</span>`));
-  });
-  if (answers.note) ul.append(el("li", {}, `<b>Note</b><span></span>`)), (ul.lastChild.querySelector("span").textContent = answers.note);
-  card.append(ul);
-
-  const text = buildText();
-  const send = el("a", { class: "cta", id: "send", href: `sms:${PHONE}${/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?"}body=${encodeURIComponent(text)}` }, `Text my answers to ${HIS_NAME}`);
-  const copy = el("button", { class: "ghost", type: "button", id: "copy" }, "Copy answers instead");
-  const toast = el("p", { class: "toast", id: "toast" }, "");
-  copy.onclick = async () => {
-    try { await navigator.clipboard.writeText(text); toast.textContent = "Copied. Paste it in our chat."; }
-    catch { toast.textContent = "Couldn’t copy. Screenshot this page instead."; }
-  };
-  card.append(send, copy, toast);
-  s.append(el("p", { class: "foot" }, "Can’t wait to see you."));
+  // final screen
+  card.append(
+    el("div", { class: "hero-face" }, face("big")),
+    el("h2", {}, "Thank you for submitting your answers!"),
+    el("p", { class: "status", id: "status" }, `<span class="spin"></span><span>Your answers are being sent to ${HIM} right now.</span>`),
+    el("div", { id: "fallback", hidden: "" }),
+    el("p", { class: "lede" }, "As for your reward, here’s a video. 🎀"),
+  );
+  const v = el("video", { src: VIDEO, controls: "", playsinline: "", preload: "metadata", id: "reward" });
+  v.onerror = () => v.replaceWith(el("div", { class: "video-wait" }, `Your video is still being made ${face()}<br>Check back soon.`));
+  card.append(v);
+  s.append(el("p", { class: "foot" }, `See you soon ${HER} 🌷`));
 }
 
 function buildText() {
-  const lines = Q.map((q) => { const a = answers[q.id]; return `${q.label}: ${Array.isArray(a) ? a.join(", ") : a || "-"}`; });
+  const lines = Q.map((q) => { const a = answers[q.id]; return `${q.label}: ${Array.isArray(a) ? a.join(", ") : (a ?? "-")}${q.id === "see" && a ? "/10" : ""}`; });
   if (answers.note) lines.push(`Note: ${answers.note}`);
-  return "my answers:\n" + lines.join("\n");
+  return lines.join("\n");
+}
+
+async function send() {
+  const text = buildText();
+  try {
+    const r = await fetch(NTFY, { method: "POST", body: text, headers: { Title: `${HER} answered 🌸`, Tags: "cherry_blossom", Priority: "high" } });
+    if (!r.ok) throw new Error(r.status);
+    $("#status").innerHTML = `<span>💖</span><span>Sent! ${HIM} has your answers.</span>`;
+  } catch {
+    $("#status").innerHTML = `<span>😅</span><span>That didn’t go through. Tap below to text them to ${HIM} instead.</span>`;
+    const fb = $("#fallback"); fb.hidden = false;
+    const sep = /iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?";
+    fb.append(el("a", { class: "ghost", href: `sms:${sep}body=${encodeURIComponent("my answers:\n" + text)}` }, `Text my answers to ${HIM}`));
+  }
 }
 
 $("#back").onclick = () => { step--; render(); };
+
+// ---------- falling petals ----------
+const pc = $("#petals"), px = pc.getContext("2d");
+const cc = $("#confetti"), cx = cc.getContext("2d");
+let W = 0, H = 0, DPR = 1;
+function size() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+  for (const c of [pc, cc]) { c.width = W * DPR; c.height = H * DPR; c.getContext("2d").setTransform(DPR, 0, 0, DPR, 0, 0); }
+}
+size(); addEventListener("resize", size);
+const PINKS = ["#ff8fb1", "#ffb3c8", "#f7a1c4", "#ffc9d9", "#ee6f9b", "#ffd1e0"];
+const petal = (y) => ({ x: Math.random() * W, y: y ?? -20, r: 7 + Math.random() * 8, vy: 0.5 + Math.random() * 0.9, sw: Math.random() * 6.28, sws: 0.01 + Math.random() * 0.02, rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.04, c: PINKS[(Math.random() * PINKS.length) | 0], a: 0.55 + Math.random() * 0.35 });
+const petals = Array.from({ length: reduce ? 8 : 26 }, () => petal(Math.random() * innerHeight));
+function drawPetal(ctx, p) {
+  ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.a; ctx.fillStyle = p.c;
+  ctx.beginPath(); ctx.moveTo(0, -p.r);
+  ctx.bezierCurveTo(p.r * 0.9, -p.r * 0.6, p.r * 0.7, p.r * 0.7, 0, p.r);
+  ctx.bezierCurveTo(-p.r * 0.7, p.r * 0.7, -p.r * 0.9, -p.r * 0.6, 0, -p.r);
+  ctx.fill();
+  ctx.globalAlpha = p.a * 0.5; ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -p.r * 0.6); ctx.lineTo(0, p.r * 0.6); ctx.stroke();
+  ctx.restore();
+}
+
+// ---------- confetti ----------
+let bits = [];
+function burst(ev, power = 1) {
+  const r = ev && ev.currentTarget && ev.currentTarget.getBoundingClientRect ? ev.currentTarget.getBoundingClientRect() : { left: W / 2, top: H / 2, width: 0, height: 0 };
+  const ox = (ev && ev.clientX) || r.left + r.width / 2, oy = (ev && ev.clientY) || r.top + r.height / 2;
+  const n = Math.round((reduce ? 12 : 38) * power);
+  for (let i = 0; i < n; i++) {
+    const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3, sp = 4 + Math.random() * 7 * Math.min(power, 1.6);
+    const heart = Math.random() < 0.25;
+    bits.push({ x: ox, y: oy, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.3, w: 5 + Math.random() * 6, h: 3 + Math.random() * 4, c: PINKS[(Math.random() * PINKS.length) | 0], life: 1, heart });
+  }
+}
+function drawHeart(ctx, s) {
+  ctx.beginPath(); ctx.moveTo(0, s * 0.3);
+  ctx.bezierCurveTo(0, 0, -s * 0.5, 0, -s * 0.5, s * 0.3);
+  ctx.bezierCurveTo(-s * 0.5, s * 0.6, 0, s * 0.8, 0, s);
+  ctx.bezierCurveTo(0, s * 0.8, s * 0.5, s * 0.6, s * 0.5, s * 0.3);
+  ctx.bezierCurveTo(s * 0.5, 0, 0, 0, 0, s * 0.3); ctx.fill();
+}
+
+function tick() {
+  px.clearRect(0, 0, W, H);
+  for (const p of petals) {
+    p.y += p.vy; p.sw += p.sws; p.x += Math.sin(p.sw) * 0.7; p.rot += p.vr;
+    if (p.y > H + 20) Object.assign(p, petal());
+    drawPetal(px, p);
+  }
+  cx.clearRect(0, 0, W, H);
+  bits = bits.filter((b) => b.life > 0);
+  for (const b of bits) {
+    b.vy += 0.22; b.vx *= 0.985; b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.life -= 0.012;
+    cx.save(); cx.translate(b.x, b.y); cx.rotate(b.rot); cx.globalAlpha = Math.max(b.life, 0); cx.fillStyle = b.c;
+    if (b.heart) drawHeart(cx, b.w * 1.8); else cx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+    cx.restore();
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
 render();
 </script>
-
 </body>
 </html>
