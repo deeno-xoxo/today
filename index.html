@@ -66,6 +66,14 @@ button:focus-visible, a:focus-visible, textarea:focus-visible { outline: 3px sol
 }
 @keyframes in { from { transform: translateY(14px) scale(.98); opacity: .3; } to { transform: none; opacity: 1; } }
 
+.sticker {
+  position: absolute; top: -38px; right: -6px; width: 92px; height: 92px; object-fit: contain;
+  transform: rotate(10deg); filter: drop-shadow(0 6px 8px rgba(120,20,60,.22)); pointer-events: none;
+  animation: pop .5s cubic-bezier(.2,.9,.3,1.5) .15s both;
+}
+@keyframes pop { from { transform: scale(.3) rotate(-20deg); opacity: 0; } to { transform: rotate(10deg); opacity: 1; } }
+.card.has-sticker h1, .card.has-sticker h2 { padding-right: 58px; }
+.card.has-sticker { margin-top: 24px; }
 h1, h2 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
 h1 { font-size: 38px; line-height: 1.04; font-weight: 800; }
 h1 em { font-style: normal; color: var(--accent); }
@@ -201,6 +209,10 @@ const Q = [
 const SEE_REACT = (n) => n <= 3 ? "wow ok 💔" : n <= 6 ? "hmm, he’ll take it 😤" : n <= 9 ? "aww 🥹" : "correct answer 💖";
 const PEEKS = { 1: "hi 👋", 3: "pick the cozy one 👀", 5: "almost done!", 6: "ill bring it 🫡" };
 
+// one sticker per screen: intro, 7 questions, note, thank-you
+const STICKERS = ["pinkalien", "sleepy", "frogcat", "alien", "laptop", "pinkalien", "coffee", "frogcat", "laptop", "sleepy"];
+STICKERS.forEach((n) => { const i = new Image(); i.src = `assets/stickers/${n}.png`; });
+
 const answers = {};
 let step = -1;
 
@@ -235,6 +247,8 @@ function render() {
   const card = el("section", { class: "card" });
   s.appendChild(card);
   window.scrollTo(0, 0);
+  const stk = STICKERS[step + 1] || STICKERS[STICKERS.length - 1];
+  if (stk) { card.classList.add("has-sticker"); card.append(el("img", { class: "sticker", src: `assets/stickers/${stk}.png`, alt: "" })); }
 
   if (step === -1) {
     card.append(
