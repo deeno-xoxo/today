@@ -340,7 +340,7 @@ function render() {
     el("div", { id: "fallback", hidden: "" }),
     el("p", { class: "lede" }, "As for your reward, here’s a video. 🎀"),
   );
-  const v = el("video", { src: VIDEO, controls: "", playsinline: "", preload: "metadata", id: "reward" });
+  const v = el("video", { src: VIDEO, poster: "assets/reward-poster.jpg", controls: "", playsinline: "", preload: "metadata", id: "reward" });
   v.onerror = () => v.replaceWith(el("div", { class: "video-wait" }, `Your video is still being made ${face()}<br>Check back soon.`));
   card.append(v);
   s.append(el("p", { class: "foot" }, `See you soon ${HER} 🌷`));
@@ -355,7 +355,9 @@ function buildText() {
 async function send() {
   const text = buildText();
   try {
-    const r = await fetch(NTFY, { method: "POST", body: text, headers: { Title: `${HER} answered 🌸`, Tags: "cherry_blossom", Priority: "high" } });
+    // emoji can't go in request headers, so settings go in the URL
+    const url = `${NTFY}?title=${encodeURIComponent(`${HER} answered 🌸`)}&tags=cherry_blossom&priority=high`;
+    const r = await fetch(url, { method: "POST", body: text });
     if (!r.ok) throw new Error(r.status);
     $("#status").innerHTML = `<span>💖</span><span>Sent! ${HIM} has your answers.</span>`;
   } catch {
